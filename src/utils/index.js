@@ -79,10 +79,25 @@ export function fetch (opt) {
   }else{
     const stream = weex.requireModule('stream');
     const modal = weex.requireModule('modal');
-    opt.url=process.env.apiDomain+opt.url;
+    opt.url='http://app.cjmltest.cn'+opt.url;
+    var _dataOpts = {
+      "Header": {
+        "SourceType": 1,
+        "UserTicket": '382AE2F01CB9CE1684BEB1D2BA0D9B0D9B825CD32A53BF605FBAC23EC3EAC09FAF0868AFB5BA9A166E700CDCBFB8BF1B600F97B47B7BAD16BDF6D5B9A1F1CB82',
+        "GuestTicket": '',
+        "AgentTicket": '',
+        "SignCode": '',
+        "machineKey": '',
+        "timeStamp": Math.round(new Date().getTime() / 1000).toString(),
+        "version": 4.0,
+      },
+      "Body": opt.body
+    };
+    
+    opt.body =JSON.stringify(_dataOpts);
+    opt.headers={'Accept': 'application/json', 'Content-Type': 'application/json'};
     
     stream.fetch(opt,function(res){
-      console.log(res);
       if(res.ok){
         if(res.data.Header.ErrorCode==0){
           if(opt.success){

@@ -29,24 +29,23 @@
           </div>
         </div>
       </div>
-      <shopitemlist v-if="curtabindex===0"></shopitemlist>
-      
+      <shopitemlist v-if="curtabindex===0" v-bind:imageList="shopinfo.shopPictures"></shopitemlist>
     <!-- </div> -->
-    <div v-if="curtabindex===1">
-      <orderlist></orderlist>
-    </div> 
+      <orderlist v-if="curtabindex===1" v-bind:cloudShopId="shopinfo.cloudShopID"></orderlist>
 </div>
 </template>
 
 <script>
 import shopitemlist from '../../components/shop/shopitemlist.vue'
 import orderlist from '../../components/order/orderlist.vue'
+import header from '../../components/header.vue'
 import {fetch} from '../../utils/index.js';
 const modal = weex.requireModule('modal');
 export default {
   components: {
     shopitemlist,
-    orderlist
+    orderlist,
+    header
   },
   data() {
     return {
@@ -61,8 +60,8 @@ export default {
           src: "http://v.cjmltest.cn/themes/default/images/login/logo.gif"
         }
       ],
-      curtabindex:1,
-      shopinfo:null
+      curtabindex:0,
+      shopinfo:{}
     };
   },
   created() {
@@ -81,8 +80,13 @@ export default {
         body:{},
         type:'json',
         success:function(res){
-          self.shopinfo = res;
-          // console.log(res);
+          self.shopinfo = res.shop;
+          // const titleBar = weex.requireModule('titleBar');
+          // titleBar=self.shopinfo.cloudShopName;
+          if(self.shopinfo && self.shopinfo.shopPictures)
+          {
+            self.shopinfo.shopPictures.map(l=>l.src=l.origPathUrl);
+          }
         }
       });
     }
